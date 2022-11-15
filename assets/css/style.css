@@ -1,0 +1,14 @@
+ol input {
+    width: 16px;
+    height: 16px;
+    margin: 0 25px 5px 0;
+}
+
+ol li {
+    white-space: nowrap;
+}
+
+.form-row {
+    display:flex;
+    flex-wrap:wrap;
+}
