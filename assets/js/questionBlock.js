@@ -5,14 +5,35 @@
 
 */
 var selectedQuestionIndexes = [];
+var date = new Date();
+var randomNumber = sfc32(Math.pow(date.getSeconds(), 4), Math.pow(date.getMilliseconds(),4), Math.pow(date.getFullYear(), 4), Math.pow(date.getUTCHours(),4));
 
 /*
-    Passing the current 10 questions to be shown on screen to this function which will return the question block for the screen
+    In order to score the test I want to have all 20 questions on the page but hide them. That way they still exist and can be iterated through but the user
+    wont see them, just the questions showing on the page currently. May even try and dynamically show questions based on page height. This wont function if
+    the user resizes the window but when a user goes in for the test it will use the current window size to determine height.
 */
-function CreateQuestionBlock(selectedIndexes, rootID){
+function GenerateQuestions() {
+
+    var index = 0;
+    for (var i = 0; i < 20; i++) {
+        index = Math.floor(randomNumber() * questions.length);
+        //Need to do a unique check but need more questions first
+        selectedQuestionIndexes.push(index);
+    }
+}
+
+
+/*
+    Create a section of questions using an anchor point at rootID. The intention is to create blocks of questions as a page, with each set of questions
+    appearing on different pages. When the user hits next it shows the next set and hides the previous set. To hide this set of questions we are passing
+    a variable to ID the set for reference later.
+*/
+function CreateQuestionBlock(selectedIndexes, rootID, blockID) {
     var bodyBlock = document.getElementById(rootID);
-    selectedIndexes.forEach((index)=>{
-        bodyBlock.appendChild(CreateQuestion(questions[index]))
+    boddyBlock.setAttribute("data-ID", `"${blockID}"`)
+    selectedIndexes.forEach((index) => {
+        bodyBlock.appendChild(CreateQuestion(questions[index].question, questions[index].answers, questions[index].questionID))
     });
 
     return bodyBlock;
@@ -21,9 +42,9 @@ function CreateQuestionBlock(selectedIndexes, rootID){
 
 /* 
     In order to create the questions we pass a question object that contains at least a question element and answers element.
-    questionObj.question - The text for the question element
-    questionObj.answers - Possible answers to that question
-    questionObj.questionID - ID for question to have shorter names
+    question - The text for the question element
+    answers - Possible answers to that question
+    questionID - ID for question to have shorter names
 
     Returns - An element of type article with the question formated for html. 
             It assumes that the LI element is display:inline and adds a link break at the end
@@ -31,24 +52,25 @@ function CreateQuestionBlock(selectedIndexes, rootID){
     The reason for this is during testing putting the checkbox before the LI caused the text for the li to appear on the line below the input.
 
  */
-function CreateQuestion(questionObj) {
+function CreateQuestion(question, answers, questionID) {
     var block = document.createElement("article");
 
     var quest = document.createElement("h3");
-    quest.innerText = questionObj.question;
+    quest.innerText = question;
 
-    var answers = document.createElement("ol");
-    answers.setAttribute("type", "A")
+    var answersList = document.createElement("ol");
+    answersList.setAttribute("type", "A")
 
     var answersString = "";
-    questionObj.answers.forEach((element, i) => {
-        answersString += `<div class='form-row'><input type='radio' id='${element}' name='${questionObj.questionID}'/><li start="${i + 1}"><label for='${element}'>${element}</label></li></div>`
+    answers.forEach((element, i) => {
+        answersString += `<div class='form-row'><input type='radio' id='${element}' name='${questionID}' value='${i}'/>
+        <li start="${i + 1}"><label for='${element}'>${element}</label></li></div>`;
     });
 
-    answers.innerHTML = answersString;
+    answersList.innerHTML = answersString;
 
     block.appendChild(quest);
-    block.appendChild(answers);
+    block.appendChild(answersList);
 
     return block;
 }
@@ -59,16 +81,16 @@ function CreateQuestion(questionObj) {
     returns a number between 0 and 1
 */
 function sfc32(a, b, c, d) {
-    return function() {
-      a >>>= 0; b >>>= 0; c >>>= 0; d >>>= 0; 
-      var t = (a + b) | 0;
-      a = b ^ b >>> 9;
-      b = c + (c << 3) | 0;
-      c = (c << 21 | c >>> 11);
-      d = d + 1 | 0;
-      t = t + d | 0;
-      c = c + t | 0;
-      return (t >>> 0) / 4294967296;
+    return function () {
+        a >>>= 0; b >>>= 0; c >>>= 0; d >>>= 0;
+        var t = (a + b) | 0;
+        a = b ^ b >>> 9;
+        b = c + (c << 3) | 0;
+        c = (c << 21 | c >>> 11);
+        d = d + 1 | 0;
+        t = t + d | 0;
+        c = c + t | 0;
+        return (t >>> 0) / 4294967296;
     }
 }
 

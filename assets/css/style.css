@@ -4,11 +4,12 @@ ol input {
     margin: 0 25px 5px 0;
 }
 
-ol li {
-    white-space: nowrap;
-}
-
 .form-row {
     display:flex;
     flex-wrap:wrap;
+}
+
+body{
+    background-color: #1a1a1a;
+    color: aliceblue;
 }
