@@ -5,11 +5,17 @@ ol input {
 }
 
 .form-row {
-    display:flex;
-    flex-wrap:wrap;
+    display: flex;
+    flex-wrap: wrap;
 }
 
-body{
+body {
     background-color: #1a1a1a;
     color: aliceblue;
+}
+
+.clock {
+    display: flex;
+    justify-content: right;
+    font-size: 30px;
 }

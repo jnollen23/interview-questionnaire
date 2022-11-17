@@ -12,15 +12,27 @@ var randomNumber = sfc32(Math.pow(date.getSeconds(), 4), Math.pow(date.getMillis
     In order to score the test I want to have all 20 questions on the page but hide them. That way they still exist and can be iterated through but the user
     wont see them, just the questions showing on the page currently. May even try and dynamically show questions based on page height. This wont function if
     the user resizes the window but when a user goes in for the test it will use the current window size to determine height.
+    
+    Instead of making a list of unique values but this line below will remove all duplicate values
+    indexes = [... new Set(array.map(x=>x))];
+    My current idea is to remove indexes from the list until I have removed enough indexes to have the total count of indexes
+    The advantage to this is that I dont have to check every time if the number I am adding is unique for the list which should reduce time complexity
+    for small arrays. If length is greater then count by enough this would be slower but if length is close to count this should be faster. The actual time
+    saved is possibly negalible but it was a fun thought experiment.
 */
-function GenerateQuestions() {
+function GenerateIndexes(count, length) {
 
     var index = 0;
-    for (var i = 0; i < 20; i++) {
-        index = Math.floor(randomNumber() * questions.length);
-        //Need to do a unique check but need more questions first
-        selectedQuestionIndexes.push(index);
+    var indexes = [];
+    for(var i = 0; i < length;i++) indexes.push(i);
+
+    while(indexes.length > count){
+        index = Math.floor(randomNumber() * length);
+        if(indexes.indexOf(index) > -1)
+            indexes.splice(index, 1);
     }
+
+    return indexes;
 }
 
 
@@ -31,9 +43,13 @@ function GenerateQuestions() {
 */
 function CreateQuestionBlock(selectedIndexes, rootID, blockID) {
     var bodyBlock = document.getElementById(rootID);
-    boddyBlock.setAttribute("data-ID", `"${blockID}"`)
+
+    var questionBlock = document.createElement("section");
+    questionBlock.setAttribute("id", blockID);
+    bodyBlock.appendChild(questionBlock);
+
     selectedIndexes.forEach((index) => {
-        bodyBlock.appendChild(CreateQuestion(questions[index].question, questions[index].answers, questions[index].questionID))
+        questionBlock.appendChild(CreateQuestion(questions[index].question, questions[index].answers, questions[index].questionID))
     });
 
     return bodyBlock;
@@ -68,6 +84,43 @@ function CreateQuestion(question, answers, questionID) {
     });
 
     answersList.innerHTML = answersString;
+
+    block.appendChild(quest);
+    block.appendChild(answersList);
+
+    return block;
+}
+
+/* 
+    Creating a new function as I did not realize the assignment had specific look and feel. My initial approach was mirroring typical questionnaires
+    that I have taken my self. Similar to the one for this class entrance. This new method will pass a function to the CreateQuestion function to do 
+    add the logic to the button events. In order to add the button event best solution I could come up with was to create the Answer row the "old" way 
+*/
+function CreateQuestion(question, answers, questionID, buttonFunction) {
+    var block = document.createElement("article");
+
+    var quest = document.createElement("h3");
+    quest.innerText = question;
+
+    var answersList = document.createElement("ul");
+
+    answers.forEach((element, i) => {
+        var row = document.createElement('li');
+        var button = document.createElement('button');
+        var span = document.createElement('span');
+        row.appendChild(button);
+        answersList.appendChild(row);
+        row.appendChild(span);
+
+        row.setAttribute('class', 'form-row');
+
+        button.setAttribute('id', element);
+        button.innerText = String.fromCharCode(65 + i);
+        button.addEventListener('click', buttonFunction);
+
+        span.innerText = element;
+        
+    });
 
     block.appendChild(quest);
     block.appendChild(answersList);

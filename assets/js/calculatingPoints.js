@@ -21,8 +21,10 @@ function CheckIfCorrect(groupName, correctAsnswer){
     var points = 0;
     var answered = false;
     radioGroup.forEach(radio=>{
-        if(radio.checked && radio.value == correctAsnswer) 
+        if(radio.checked && radio.value == correctAsnswer) {
             points = 2;
+            console.log("Found Answer");
+        }
 
         if(radio.checked) answered = -1;
     })
