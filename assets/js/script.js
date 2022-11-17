@@ -6,6 +6,7 @@ Questions are in the questions.js in order to allow that specific block of code 
         -Create High Score Table
         -Do scoring
         -Create questions
+        -Do the CSS
  */
 
 selectedQuestionIndexes = GenerateIndexes(20, questions.length);
