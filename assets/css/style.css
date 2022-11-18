@@ -12,6 +12,9 @@ ol input {
 body {
     background-color: #1a1a1a;
     color: aliceblue;
+    width:75vw;
+    margin:15vh auto;
+    font-size:larger;
 }
 
 .clock {
@@ -19,3 +22,95 @@ body {
     justify-content: right;
     font-size: 30px;
 }
+
+button{
+    margin:10px;
+}
+
+#questions-area ol{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+#questions-area li{
+    margin:10px;
+    align-items: center;
+}
+
+.intro-button{
+    align-items: center;
+    display:flex;
+    width: 75vw;
+    justify-content: center;
+} 
+
+.intro-button button{
+    width:200px;
+    height:50px;
+    background-color: purple;
+    border-radius: 12px;
+    font-size: larger;
+    color:aliceblue;
+}
+
+#questions-area ul button{
+    width:40px;
+    height:40px;
+    font-size:large;
+    background-color: purple;
+    border-radius: 10px;
+    font-size: larger;
+    color:aliceblue;
+}
+
+#final-scoring input{
+    font-size: larger;
+}
+
+#final-scoring{
+    font-size: 22px;
+}
+
+#final-scoring button{
+    width:150px;
+    height:50px;
+    font-size:large;
+    background-color: purple;
+    border-radius: 10px;
+    font-size: larger;
+    color:aliceblue;
+}
+
+#scoring-label{
+    display: inline;
+}
+
+#high-scores ol{
+    display:flex;
+    flex-direction: column;
+}
+
+#high-scores li{
+    justify-content: space-around;
+    font-size: 22px;
+    width:75px;
+}
+
+#high-scores span{
+    font-size: 22px;
+    margin: 0 35px 0 15px;
+}
+
+#high-scores button{
+    width:200px;
+    height:50px;
+    background-color: purple;
+    border-radius: 12px;
+    font-size: larger;
+    color:aliceblue;
+}
+
+#go-back-button{
+    display:flex;
+    justify-content: center;
+} 

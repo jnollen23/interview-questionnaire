@@ -3,18 +3,18 @@ Questions are in the questions.js in order to allow that specific block of code 
 */
 /*
     To DO
-        -Create High Score Table
-        -Do scoring
+        -Create High Score Table - X
+        -Do scoring - X
         -Create questions
         -Do the CSS
  */
 
-selectedQuestionIndexes = GenerateIndexes(20, questions.length);
+var questionCount = 20;
 var currentQuestion;
-var questionCount = 1;
+var questionIndex = 0;
 var timeout;
 var timeLeft = 300;
-var score = 0;
+var currentScore = 0;
 
 function ShowNextQuestion(index) {
     var question = questions[index]
@@ -30,64 +30,87 @@ function ShowNextQuestion(index) {
 
 function AnswerClicked(event) {
     event.preventDefault();
-    if(questionCount < selectedQuestionIndexes.length)
-        ShowNextQuestion(selectedQuestionIndexes[questionCount++]);
+    if(questions[selectedQuestionIndexes[questionIndex]].correctAnswer == event.target.dataset.id){
+        currentScore++;
+        console.log(currentScore);
+    }
+    else WrongAnswer();
+
+    questionIndex++;
+    if (questionIndex < selectedQuestionIndexes.length){
+        ShowNextQuestion(selectedQuestionIndexes[questionIndex]);
+    }
     else EndQuiz();
 }
 
-function BeginTest(e){
+function BeginTest(e) {
     e.preventDefault();
+
+    selectedQuestionIndexes = GenerateIndexes(questionCount, questions.length);
+    currentScore = 0;
+    questionIndex = 0;
     timeLeft = 300;
     StartClock();
     document.getElementById('intro').setAttribute('hidden', 'true');
     document.getElementById('questions-area').removeAttribute('hidden');
-    ShowNextQuestion(0);
+    ShowNextQuestion(selectedQuestionIndexes[questionIndex]);
 }
 
-function WrongAnswer(){
+function WrongAnswer() {
     clearInterval(timeout);
     timeLeft -= 5;
-    ClearClock();
     UpdateClock();
     StartClock();
 }
 
-function StartClock(){
+function StartClock() {
     timeout = setInterval(() => {
-        if(timeLeft > 0)
+        if (timeLeft > 0)
             timeLeft--;
         else EndQuiz();
         UpdateClock();
     }, 1000);
 }
 
-function EndQuiz(){
+function EndQuiz() {
     clearInterval(timeout)
-    document.getElementById('points-record').innerText = score;
+    document.getElementById('points-record').innerText = currentScore;
     document.getElementById("questions-area").setAttribute('hidden', 'true');
     document.getElementById("final-scoring").removeAttribute('hidden');
 }
 
-function UpdateClock(){
+function UpdateClock() {
     document.getElementById('clock').innerText = `${Math.floor(timeLeft / 60)}:${timeLeft % 60}`;
 }
 
-function ClearClock(){document.getElementById('clock').innerText = "";}
+function ClearClock() { document.getElementById('clock').innerText = ""; }
 
-function SaveScore(e){
+function SubmitName(e) {
     e.preventDefault();
-    var name = document.getElementById('applicant-name');
-    var score = localStorage.getItem(name)
-    if(score !== null){
-        if(score < this.score)
-            localStorage.setItem(name, this.score);
-    } 
-    else localStorage.setItem(name, this.score);
+    var name = document.getElementById('applicant-name').value;
+    document.getElementById('applicant-name').value = '';
+    if (name != '') {
+        StoreScore(currentScore, name)
+        document.getElementById('final-scoring').setAttribute('hidden', true);
+        document.getElementById('high-scores').removeAttribute('hidden');
+    }
+}
+
+function LeaveHighScores() {
+    document.getElementById('high-scores').setAttribute('hidden', true);
+    document.getElementById('intro').removeAttribute('hidden');
+}
+
+function GoToHighScores() {
+    document.getElementById('intro').setAttribute('hidden', true);
+    document.getElementById('high-scores').removeAttribute('hidden');
 }
 
 document.getElementById('start-test').addEventListener('click', BeginTest);
-document.getElementById('save-score').addEventListener('click', SaveScore)
+document.getElementById('save-score').addEventListener('click', SubmitName);
+document.getElementById('go-home').addEventListener('click', LeaveHighScores);
+document.getElementById('go-scores').addEventListener('click', GoToHighScores);
 
-
+HighScoreTable();
 
 

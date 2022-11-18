@@ -100,7 +100,7 @@ function CreateQuestion(question, answers, questionID, buttonFunction) {
     var block = document.createElement("article");
 
     var quest = document.createElement("h3");
-    quest.innerText = question;
+    quest.innerHTML = question;
 
     var answersList = document.createElement("ul");
 
@@ -114,7 +114,7 @@ function CreateQuestion(question, answers, questionID, buttonFunction) {
 
         row.setAttribute('class', 'form-row');
 
-        button.setAttribute('id', element);
+        button.setAttribute('data-id', i);
         button.innerText = String.fromCharCode(65 + i);
         button.addEventListener('click', buttonFunction);
 
